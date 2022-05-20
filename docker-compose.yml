@@ -1,0 +1,29 @@
+version: "3"
+services:
+  # описание сервиса polls_server
+  polls_server:
+    # расположение dockerfile для сборки контейнера
+    build: .
+    # соответствие портов хоста и контейнера
+    ports:
+      - "8081:8080"
+    # контейнеры, от которых зависит данный
+    depends_on:
+      - pq_db
+  # описание сервиса базы данных
+  pq_db:
+    # докер образ, на основе котого создается контейнер
+    image: postgres:latest
+    # перезапустить контейнер, если он остановился
+    restart: always
+    # соответствие директорий хоста и контейнера
+    volumes:
+      - /var/lib/postgresql/data:/var/lib/postgresql/data
+    # переменные окружения контейнера
+    environment:
+      - POSTGRES_PASSWORD=12345
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=postgres
+    # соответствие портов хоста и контейнера
+    ports:
+      - "5436:5432"
